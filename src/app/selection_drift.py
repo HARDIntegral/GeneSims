@@ -34,15 +34,11 @@ def sd_reset():
 def sd_next():
     state = session['selec_d_state']
 
-    # Check if the generation limit is reached
-    if state['gen'] >= state['gens']:
-        return jsonify(state)
-    
-    # Calculate the next frequency and update the state
-    next_freq = next_gen(state['freqs'][-1], state['w11'], state['w12'], state['w22'], state['pop'])
-    state['freqs'].append(next_freq)  # Append to the freqs list directly
-    state['gen'] += 1  # Increment the generation
-    
+    while state['gen'] < state['gens']:
+        next_freq = next_gen(state['freqs'][-1], state['w11'], state['w12'], state['w22'], state['pop'])
+        state['freqs'].append(next_freq)
+        state['gen'] += 1
+
     # Update session with the modified state
     session['selec_d_state'] = state
     

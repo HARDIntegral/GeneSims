@@ -40,13 +40,12 @@
                 pop: document.getElementById('pop').value
             })
         })
-            .then(response => response.json())
-            .then(data => {
-                freqs = [];
-                gen = 0;
-
-                updateSimulation();
-            })
+        .then(response => response.json())
+        .then(data => {
+            freqs = [];
+            gen = 0;
+            updateSimulation();
+        })
     }
 
     function updateSimulation() {
@@ -56,29 +55,26 @@
                 'Content-Type': 'application/json'
             }
         })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            fetch('plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    freqs: data.freqs
+                })
+            })
             .then(response => response.json())
             .then(data => {
-                if (data.gen < data.gens) {
-                    updateSimulation();
-                } else {
-                    console.log(data);
-                    fetch('plot', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            freqs: data.freqs
-                        })
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        const plotDiv = document.getElementById('plot');
-                        Plotly.newPlot(plotDiv, data.data, data.layout);
-                    });
-                }
-            })
+                const plotDiv = document.getElementById('plot');
+                Plotly.newPlot(plotDiv, data.data, data.layout);
+            });        
+        })
     }
+
 </script>
 
 {% endblock %}

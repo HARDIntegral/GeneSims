@@ -23,6 +23,7 @@
 <button onclick='startSimulation()'>Start</button>
 
 <script>
+
     function startSimulation() {
         fetch('s_reset', {
             method: 'POST',
@@ -55,26 +56,23 @@
         })
         .then(response => response.json())
         .then(data => {
-            if (data.gen < data.gens) {
-                updateSimulation();
-            } else {
-                fetch('plot', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        freqs: data.freqs
-                    })
+            fetch('plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    freqs: data.freqs
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        const plotDiv = document.getElementById('plot');
-                        Plotly.newPlot(plotDiv, data.data, data.layout);
-                    });
-            }
+            })
+            .then(response => response.json())
+            .then(data => {
+                const plotDiv = document.getElementById('plot');
+                Plotly.newPlot(plotDiv, data.data, data.layout);
+            });
         })
     }
+
 </script>
 
 {% endblock %}
