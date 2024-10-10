@@ -7,10 +7,24 @@
     </head>
     <body>
         {% block title %}{% endblock %}
+        <div id="menu">
+            <ul>
+                <li><a href="/selection">Selection</a></li>
+                <li><a href="/selection_drift">Selection with Drift</a></li>
+            </ul>
+        </div>
         <div id="plot">
             <script>
                 // Fetch the plot data from the Flask server and render it
-                fetch('/plot')
+                fetch('/plot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            freqs: []
+                        })
+                    })
                     .then(response => response.json())
                     .then(data => {
                         const plotDiv = document.getElementById('plot');

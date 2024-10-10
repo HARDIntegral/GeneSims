@@ -2,7 +2,6 @@
 
 {% block title %}<h1>{{ title }}</h1>{% endblock %}
 
-
 {% block settings %}
 
 <label for='gens'>Number for Generations:</label>
@@ -20,11 +19,14 @@
 <label for='w22'>Fitness of A2A2 (w22):</label>
 <input type='number' id='w22' name='w22' value='0.8' min='0' max='2' step='0.1' required>
 <br>
+<label for='pop'>Population Size</label>
+<input type='number' id='pop' name='pop' value='100' min='10' max='1000000' step='10' required>
+<br>
 <button onclick='startSimulation()'>Start</button>
 
 <script>
     function startSimulation() {
-        fetch('s_reset', {
+        fetch('sd_reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -34,46 +36,48 @@
                 p: document.getElementById('p').value,
                 w11: document.getElementById('w11').value,
                 w12: document.getElementById('w12').value,
-                w22: document.getElementById('w22').value
+                w22: document.getElementById('w22').value,
+                pop: document.getElementById('pop').value
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            freqs = [];
-            gen = 0;
+            .then(response => response.json())
+            .then(data => {
+                freqs = [];
+                gen = 0;
 
-            updateSimulation();
-        })
+                updateSimulation();
+            })
     }
 
     function updateSimulation() {
-        fetch('s_next', {
+        fetch('sd_next', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.gen < data.gens) {
-                updateSimulation();
-            } else {
-                fetch('plot', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({
-                        freqs: data.freqs
+            .then(response => response.json())
+            .then(data => {
+                if (data.gen < data.gens) {
+                    updateSimulation();
+                } else {
+                    console.log(data);
+                    fetch('plot', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            freqs: data.freqs
+                        })
                     })
-                })
                     .then(response => response.json())
                     .then(data => {
                         const plotDiv = document.getElementById('plot');
                         Plotly.newPlot(plotDiv, data.data, data.layout);
                     });
-            }
-        })
+                }
+            })
     }
 </script>
 

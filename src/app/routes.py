@@ -1,8 +1,9 @@
 import plotly.graph_objs as go
-from flask import jsonify, render_template, make_response, request, session
+from flask import jsonify, request, render_template, make_response, session
 
 from app import app
-from app.selection import next_gen
+from app.selection import s_reset, s_next
+from app.selection_drift import sd_reset, sd_next
 
 @app.route('/favicon.ico')
 def favicon():
@@ -28,49 +29,24 @@ def create_plot(freqs=None):
 plot_html = create_plot()
 
 @app.route('/')
+def index():
+    return render_template('index.html', title='Home', plot=plot_html)
+
+@app.route('/selection')
 def selection():
     global plot_html
     return render_template('selection.html', title='Selection', plot=plot_html)
 
-@app.route('/plot')
+@app.route('/selection_drift')
+def selection_drift():
+    global plot_html
+    return render_template('selection_drift.html', title='Selection with Drift', plot=plot_html)
+
+@app.route('/plot', methods=['POST'])
 def plot():
-    state = session.get('selec_state', None)  # Get the current session state
-    freqs = state.get('freqs', []) if state else None  # Extract frequencies if available
+    freqs = request.get_json().get('freqs', [])
     fig = create_plot(freqs)  # Pass frequencies or None for an empty plot
 
     # Convert the figure to JSON format for Plotly.js
     plot_data = fig.to_dict()
     return jsonify(plot_data)
-
-@app.route('/reset', methods=['POST'])
-def reset():
-    data = request.get_json()
-    session['selec_state'] = {
-        'gen': 0,
-        'gens': int(data.get('gens')),
-        'p': float(data.get('p')),
-        'w11': float(data.get('w11')),
-        'w12': float(data.get('w12')),
-        'w22': float(data.get('w22')),
-        'freqs': [float(data.get('p'))]
-    }
-    return jsonify(session['selec_state']) # Send the data as JSON
-
-@app.route('/next', methods=['POST'])
-def next():
-    state = session['selec_state']
-
-    # Check if the generation limit is reached
-    if state['gen'] >= state['gens']:
-        return jsonify(state)
-    
-    # Calculate the next frequency and update the state
-    next_freq = next_gen(state['freqs'][-1], state['w11'], state['w12'], state['w22'])
-    state['freqs'].append(next_freq)  # Append to the freqs list directly
-    state['gen'] += 1  # Increment the generation
-    
-    # Update session with the modified state
-    session['selec_state'] = state
-    
-    return jsonify(state)  # Send the updated state as JSON
-        
