@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    </head>
+    <body>
+        {% block title %}{% endblock %}
+        <div id="plot">
+            <script>
+                // Fetch the plot data from the Flask server and render it
+                fetch('/plot')
+                    .then(response => response.json())
+                    .then(data => {
+                        const plotDiv = document.getElementById('plot');
+                        Plotly.newPlot(plotDiv, data.data, data.layout);
+                    });
+            </script>
+        </div>
+        <div id="settings">
+            {% block settings %}{% endblock %}
+        </div>
+    </body>
+</html>
