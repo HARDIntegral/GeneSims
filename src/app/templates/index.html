@@ -1,16 +1,21 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+        <title>GeneSims</title>
+        <meta charset='UTF-8'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+        <link rel='stylesheet' type='text/css' href='../static/style.css'>
     </head>
     <body>
-        {% block title %}{% endblock %}
+        <div id="title"> 
+            {% block title %}{% endblock %}
+        </div>
         <div id="menu">
             <ul>
-                <li><a href="/selection">Selection</a></li>
-                <li><a href="/selection_drift">Selection with Drift</a></li>
+                <li><a href='/selection'>Selection</a></li>
+                <li><a href='/drift'>Basic Drift</a></li>
+                <li><a href='/selection_drift'>Selection with Drift</a></li>
             </ul>
         </div>
         <div id="plot">

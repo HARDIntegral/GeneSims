@@ -23,6 +23,7 @@
 <input type='number' id='pop' name='pop' value='100' min='10' max='1000000' step='10' required>
 <br>
 <button onclick='startSimulation()'>Start</button>
+<button onclick='clearGraph()'>Clear</button>
 
 <script>
     function startSimulation() {
@@ -57,7 +58,6 @@
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data);
             fetch('plot', {
                 method: 'POST',
                 headers: {
@@ -70,9 +70,23 @@
             .then(response => response.json())
             .then(data => {
                 const plotDiv = document.getElementById('plot');
-                Plotly.newPlot(plotDiv, data.data, data.layout);
+                Plotly.react(plotDiv, data.data, data.layout);
             });        
         })
+    }
+
+    function clearGraph() {
+        fetch('/clear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const plotDiv = document.getElementById('plot');
+            Plotly.react(plotDiv, data.data, data.layout);
+        });
     }
 
 </script>

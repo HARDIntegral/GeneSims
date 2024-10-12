@@ -2,23 +2,33 @@
 
 {% block title %}<h1>{{ title }}</h1>{% endblock %}
 
-
 {% block settings %}
 
-<label for='gens'>Number for Generations:</label>
-<input type='number' id='gens' name='gens' min='10' max='10000' value='100' required>
+<label for='init_freq'>Inital Frequency</label>
+<select name='init_freq' id='init_freq'>
+    <option value='0.1'>0.1</option>
+    <option value='0.5'>0.5</option>
+    <option value='0.9'>0.9</option>
+</select>
 <br>
-<label for='p'>Initial Allele Frequency (p):</label>
-<input type='number' id='p' name='p' min='0' max='1' step='0.01' value='0.1' required>
+<label for='pop'>Population</label>
+<select name='pop' id='pop'>
+    <option value='10'>10</option>
+    <option value='25'>25</option>
+    <option value='50'>50</option>
+    <option value='100'>100</option>
+    <option value='250'>250</option>
+    <option value='1000'>1000</option>
+</select>
 <br>
-<label for='w11'>Fitness for A1A1 (w11):</label>
-<input type='number' id='w11' name='w11' value='1.2' min='0' max='2' step='0.1' required>
-<br>
-<label for='w12'>Fitness of A1A2 (w12):</label>
-<input type='number' id='w12' name='w12' value='1.0' min='0' max='2' step='0.1' required>
-<br>
-<label for='w22'>Fitness of A2A2 (w22):</label>
-<input type='number' id='w22' name='w22' value='0.8' min='0' max='2' step='0.1' required>
+<label for='gens'>Generations</label>
+<select name='gens' id='gens'>
+    <option value='50'>50</option>
+    <option value='100'>100</option>
+    <option value='250'>250</option>
+    <option value='1000'>1000</option>
+    <option value='2500'>2500</option>
+</select>
 <br>
 <button onclick='startSimulation()'>Start</button>
 <button onclick='clearGraph()'>Clear</button>
@@ -26,30 +36,26 @@
 <script>
 
     function startSimulation() {
-        fetch('s_reset', {
+        console.log(parseInt(document.getElementById('gens').value))
+        fetch('d_reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                gens: document.getElementById('gens').value,
-                p: document.getElementById('p').value,
-                w11: document.getElementById('w11').value,
-                w12: document.getElementById('w12').value,
-                w22: document.getElementById('w22').value
+                init_freq: parseFloat(document.getElementById('init_freq').value),
+                pop: parseInt(document.getElementById('pop').value),
+                gens: parseInt(document.getElementById('gens').value)
             })
         })
         .then(response => response.json())
         .then(data => {
-            freqs = [];
-            gen = 0;
-
-            updateSimulation();
-        })
+            updateSimulation(data);
+        });
     }
 
     function updateSimulation() {
-        fetch('s_next', {
+        fetch('d_next', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -73,7 +79,7 @@
             });
         })
     }
-
+    
     function clearGraph() {
         fetch('/clear', {
             method: 'POST',
