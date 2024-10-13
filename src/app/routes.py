@@ -4,6 +4,7 @@ from flask import jsonify, request, render_template, make_response, session
 from app import app
 
 # Makes these routes visible
+from app.wbar import w_bar, w_reset, w_next, clear_w_plot
 from app.selection import s_reset, s_next
 from app.drfit import d_reset, d_next
 from app.selection_drift import sd_reset, sd_next
@@ -73,7 +74,6 @@ def plot():
 @app.route('/clear', methods=['POST'])
 def clear_graph():
     session['freqs_list'] = []  # Reset frequency data to an empty list
-    session['current_plot'] = None  # Optionally clear current plot from session
     # Create an empty plot
     fig = create_plot()  # Use your existing function to create an empty plot
     # Convert the figure to JSON format for Plotly.js

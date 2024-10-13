@@ -8,36 +8,39 @@
         <link rel='stylesheet' type='text/css' href='../static/style.css'>
     </head>
     <body>
-        <div id="title"> 
+        <div id='title'> 
             {% block title %}{% endblock %}
         </div>
-        <div id="menu">
+        <div id='menu'>
             <ul>
+                <li><a href='/w_bar'>W Bar</a></li>
                 <li><a href='/selection'>Selection</a></li>
                 <li><a href='/drift'>Basic Drift</a></li>
                 <li><a href='/selection_drift'>Selection with Drift</a></li>
             </ul>
         </div>
-        <div id="plot">
+        <div id='plot'>
+            {% block plotscript %}
             <script>
                 // Fetch the plot data from the Flask server and render it
                 fetch('/plot', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            freqs: []
-                        })
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        freqs: []
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        const plotDiv = document.getElementById('plot');
-                        Plotly.newPlot(plotDiv, data.data, data.layout);
-                    });
+                })
+                .then(response => response.json())
+                .then(data => {
+                    const plotDiv = document.getElementById('plot');
+                    Plotly.newPlot(plotDiv, data.data, data.layout);
+                });
             </script>
+            {% endblock %}
         </div>
-        <div id="settings">
+        <div id='settings'>
             {% block settings %}{% endblock %}
         </div>
     </body>

@@ -1,0 +1,120 @@
+{% extends 'index.html' %}
+
+{% block title %}<h1>{{ title }}</h1>{% endblock %}
+
+{% block plotscript %}
+<script>
+    // Fetch the plot data from the Flask server and render it
+    fetch('/w_plot', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            w_bars: []
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        const plotDiv = document.getElementById('plot');
+        Plotly.newPlot(plotDiv, data.data, data.layout);
+    });
+</script>
+{% endblock %}
+
+{% block settings %}
+
+<label for='w11'>w11:</label>
+<select name='w11' id='w11'>
+    <option value='0.6'>0.6</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.9'>0.9</option>
+    <option value='1.0'>1.0</option>
+</select>
+<label for='w12'>w11:</label>
+<select name='w12' id='w12'>
+    <option value='0.6'>0.6</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.9'>0.9</option>
+    <option value='1.0'>1.0</option>ß
+</select>
+<label for='w22'>w22:</label>
+<select name='w22' id='w22'>
+    <option value='0.6'>0.6</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.9'>0.9</option>
+    <option value='1.0'>1.0</option>
+</select>
+<br>
+<button onclick='startSimulation()'>Start</button>
+<button onclick='clearGraph()'>Clear</button>
+
+
+<script>
+    
+    function startSimulation() {
+        fetch('/w_reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                w11: parseFloat(document.getElementById('w11').value),
+                w12: parseFloat(document.getElementById('w12').value),
+                w22: parseFloat(document.getElementById('w22').value)
+            })
+        })
+       .then(response => response.json())
+       .then(data => {
+            w_bars = [];
+
+            updateSimulation();
+       })
+    }
+
+    function updateSimulation() {
+        fetch('w_next', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            fetch('w_plot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    w_bars: data.w_bars
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const plotDiv = document.getElementById('plot');
+                Plotly.react(plotDiv, data.data, data.layout);
+            });
+        })
+    }
+
+    function clearGraph() {
+        fetch('/w_clear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const plotDiv = document.getElementById('plot');
+            Plotly.react(plotDiv, data.data, data.layout);
+        });
+    }
+
+</script>
+
+{% endblock %}
