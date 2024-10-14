@@ -1,6 +1,7 @@
 import plotly.graph_objs as go
 from flask import jsonify, request, render_template, session
 from random import random as rand
+import numpy as np
 
 from app import app
 
@@ -60,64 +61,51 @@ def mig_reset():
 
 def migrate():
     state = session['mig_state']
-    num_pops = len(state.get('pop_freqs'))
-    temp_freqs = [0.0] * num_pops
+    pop_freqs = np.array(state.get('pop_freqs'))
+    num_pops = len(pop_freqs)
     mig = state.get('mig')
+    temp_freqs = np.zeros(num_pops)
 
     for n in range(num_pops):
-        temp_freqs[n] = state.get('pop_freqs')[n] * (1 - mig)
-        for j in range(n):
-            temp_freqs[j] += mig * state.get('pop_freqs')[j] / (num_pops - 1)
-        for j in range(n + 1, num_pops):
-            temp_freqs[j] += mig * state.get('pop_freqs')[j] / (num_pops - 1)
+        temp_freqs[n] = pop_freqs[n] * (1 - mig)
+        temp_freqs += mig * pop_freqs / (num_pops - 1)
     
-    state['pop_freqs'] = temp_freqs
+    state['pop_freqs'] = temp_freqs.tolist()
+
 
 def calc_freq(freq):
-    mig = session.get('mig_state').get('mig')
     n = session.get('mig_state').get('pop')
-    num_freq_occ = 0
+    random_values = np.random.rand(2 * n)
+    num_freq_occ = np.sum(random_values < freq)
+    return num_freq_occ / (2 * n)
 
-    for _ in range(0, 2*n):
-        random = rand()
-        if random < freq:
-            num_freq_occ += 1
-
-    return num_freq_occ/(2 * n)
 
 @app.route('/mig_next', methods=['POST'])
 def mig_next():
     state = session.get('mig_state')
     report_interval = 10
-    num_pops = len(state.get('pop_freqs'))
 
-    for i in range(0, report_interval):
-        if i < report_interval:
-            migrate()  # Call the migration function
-            for j in range(0, num_pops):
-                state.get('pop_freqs')[j] = calc_freq(state.get('pop_freqs')[j]) 
-    
+    for _ in range(report_interval):
+        migrate()
+        state['pop_freqs'] = [
+            calc_freq(freq) for freq in state.get('pop_freqs')
+        ]
+
     session['mig_state'] = state
     return jsonify(state)  # Send the updated state data back to the client
 
+
 @app.route('/mig_plot', methods=['POST'])
 def mig_plot():
-    # Check if the request contains allele frequency data
     allele_frequencies = request.json.get('allele_frequencies', [])
-    # Update the session with new frequency data
-    session['freqs_list'] = allele_frequencies  # Update session data
-    # Create a new plot with the updated data
-    fig = create_mig_plot(allele_frequencies)  # Call the function to create the updated plot
-    # Convert the figure to JSON format for Plotly.js
+    session['freqs_list'] = allele_frequencies 
+    fig = create_mig_plot(allele_frequencies)
     plot_data = fig.to_dict()
-    
-    return jsonify(plot_data)  # Send the updated plot data back to the client
+    return jsonify(plot_data)
 
 @app.route('/mig_clear', methods=['POST'])
 def clear_mig_plot():
-    session['freqs_list'] = []  # Reset frequency data to an empty list
-    # Create an empty plot
-    fig = create_mig_plot()  # Use your existing function to create an empty plot
-    # Convert the figure to JSON format for Plotly.js
+    session['freqs_list'] = [] 
+    fig = create_mig_plot() 
     plot_data = fig.to_dict()
     return jsonify(plot_data)

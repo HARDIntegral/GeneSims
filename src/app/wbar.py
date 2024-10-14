@@ -1,5 +1,6 @@
 import plotly.graph_objs as go
 from flask import jsonify, request, session, render_template
+import numpy as np
 
 from app import app
 
@@ -29,15 +30,10 @@ def create_w_plot(w_bars_list=None):
 @app.route('/w_plot', methods=['POST'])
 def w_plot():
     w_bars = request.get_json().get('w_bars', [])
-    # Get existing frequency lists from session, or initialize if not present
     w_bars_list = session.get('w_bars_list', [])
-    # Append the new frequencies as a new trace
     w_bars_list.append(w_bars)
-    # Update the session with the new list of frequency lists
     session['w_bars_list'] = w_bars_list
-    # Create a new plot with the list of lists of frequencies
-    fig = create_w_plot(w_bars_list)  # Pass the list of lists
-    # Convert the figure to JSON format for Plotly.js
+    fig = create_w_plot(w_bars_list)
     plot_data = fig.to_dict()
     return jsonify(plot_data)
 
@@ -55,11 +51,14 @@ def w_reset():
 @app.route('/w_next', methods=['POST'])
 def w_next():
     state = session['w_bar_state']
-    for i in range(1, 101):
-        next_freq = w_bar_calc(state['w11'], state['w12'], state['w22'], i/100)
-        state['w_bars'].append(next_freq)
+    
+    proportions = np.linspace(0.01, 1.0, 100)
+    new_freqs = w_bar_calc(state['w11'], state['w12'], state['w22'], proportions)
+    state['w_bars'].extend(new_freqs.tolist())
     session['w_bar_state'] = state
+    
     return jsonify(state)  # Send the updated state as JSON
+
 
 @app.route('/w_clear', methods=['POST'])
 def clear_w_plot():

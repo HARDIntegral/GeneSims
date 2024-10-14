@@ -1,6 +1,6 @@
 import plotly.graph_objs as go
 from flask import jsonify, request, render_template, session
-from random import random as rand
+import numpy as np
 
 from app import app
 
@@ -8,11 +8,11 @@ def create_mut_plot(freqs_list=None):
     # Create the histogram
     fig = go.Figure(data=[
         go.Histogram(
-            x=freqs_list,  # Use the provided data or initialize with a range
+            x=freqs_list,  
             xbins=dict(
-                start=0,   # Start of the range
-                end=1.1,     # End of the range
-                size=0.1   # Width of each bin
+                start=0,  
+                end=1.1,  
+                size=0.1   
             ),
             marker_color='blue',
             opacity=0.75
@@ -26,13 +26,13 @@ def create_mut_plot(freqs_list=None):
         yaxis_title='Number of Populations',
         xaxis=dict(
             dtick=0.1, range=[0,1.1]
-        ),  # Set x-axis ticks
+        ),  
         yaxis=dict(
             title='Count',
-            autorange=True,  # Auto-adjust the y-axis based on data
-            range=[0, 10]  # Set minimum y-axis value to 0),
+            autorange=True, 
+            range=[0, 10] 
         ),
-        bargap=0.2  # Gap between bars
+        bargap=0.2 
     )
     
     return fig
@@ -61,47 +61,43 @@ def mut_reset():
 def calc_freq(freq):
     mu = session.get('mut_state').get('mu')
     n = session.get('mut_state').get('pop')
-    num_freq_occ = 0
+    
+    random_values = np.random.rand(2 * n)
+    freq_occurrences = (
+        (random_values < freq * (1.0 - mu)) | 
+        (random_values > 1.0 - mu + freq * mu)
+    )
 
-    for _ in range(0, 2*n):
-        random = rand()
-        if random < freq * (1.0 - mu) or random > 1.0 - mu + freq * mu:
-            num_freq_occ += 1
+    return np.sum(freq_occurrences) / (2 * n)
 
-    return num_freq_occ/(2 * n)
 
 @app.route('/mut_next', methods=['POST'])
 def mut_next():
     state = session.get('mut_state')
     report_interval = 10
-    num_pops = len(state.get('pop_freqs'))
+    pop_freqs = np.array(state.get('pop_freqs'))  # Convert to a NumPy array
 
-    for i in range(0, report_interval):
-        if i < report_interval:
-            for j in range(0, num_pops):
-                state.get('pop_freqs')[j] = calc_freq(state.get('pop_freqs')[j]) 
-    
+    for _ in range(report_interval):
+        pop_freqs = np.array([calc_freq(freq) for freq in pop_freqs])
+    state['pop_freqs'] = pop_freqs.tolist()  
+
     session['mut_state'] = state
     return jsonify(state)  # Send the updated state data back to the client
 
+
+
 @app.route('/mut_plot', methods=['POST'])
 def mut_plot():
-    # Check if the request contains allele frequency data
     allele_frequencies = request.json.get('allele_frequencies', [])
-    # Update the session with new frequency data
-    session['freqs_list'] = allele_frequencies  # Update session data
-    # Create a new plot with the updated data
-    fig = create_mut_plot(allele_frequencies)  # Call the function to create the updated plot
-    # Convert the figure to JSON format for Plotly.js
+    session['freqs_list'] = allele_frequencies 
+    fig = create_mut_plot(allele_frequencies) 
     plot_data = fig.to_dict()
     
     return jsonify(plot_data)  # Send the updated plot data back to the client
 
 @app.route('/mut_clear', methods=['POST'])
 def clear_mut_plot():
-    session['freqs_list'] = []  # Reset frequency data to an empty list
-    # Create an empty plot
-    fig = create_mut_plot()  # Use your existing function to create an empty plot
-    # Convert the figure to JSON format for Plotly.js
+    session['freqs_list'] = [] 
+    fig = create_mut_plot()
     plot_data = fig.to_dict()
     return jsonify(plot_data)

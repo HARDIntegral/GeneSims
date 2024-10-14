@@ -1,5 +1,6 @@
 from flask import jsonify, request, session
 from random import random as rand
+import numpy as np
 
 from app import app
 
@@ -27,12 +28,23 @@ def d_reset():
 @app.route('/d_next', methods=['POST'])
 def d_next():
     state = session['drift_state']
+    current_gen = state['gen']
+    total_gens = state['gens']
+    pop = state['pop']
 
-    while state['gen'] < state['gens']:
-        next_freq = next_gen(state['freqs'][-1], state['pop'])
-        state['freqs'].append(next_freq)
-        state['gen'] += 1
+    freqs = np.array(state['freqs'])
+    remaining_gens = total_gens - current_gen
+    random_values = np.random.rand(2 * pop, remaining_gens)
+    new_freqs = np.empty(remaining_gens)
+    current_freq = freqs[-1]
 
+    for gen in range(remaining_gens):
+        success_count = np.sum(random_values[:, gen] < current_freq)
+        new_freqs[gen] = success_count / (2 * pop)
+        current_freq = new_freqs[gen]
+
+    state['freqs'].extend(new_freqs.tolist())
+    state['gen'] = total_gens
     session['drift_state'] = state
 
     return jsonify(state)
