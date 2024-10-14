@@ -25,6 +25,7 @@ def create_w_plot(w_bars_list=None):
     )
     
     return fig
+
 @app.route('/w_plot', methods=['POST'])
 def w_plot():
     w_bars = request.get_json().get('w_bars', [])

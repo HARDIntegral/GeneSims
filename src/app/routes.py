@@ -8,6 +8,8 @@ from app.wbar import w_bar, w_reset, w_next, clear_w_plot
 from app.selection import s_reset, s_next
 from app.drfit import d_reset, d_next
 from app.selection_drift import sd_reset, sd_next
+from app.drift_mutation import dm, clear_mut_plot
+from app.drift_migration import dmig, clear_mig_plot
 
 @app.route('/favicon.ico')
 def favicon():

@@ -5,13 +5,13 @@
 {% block plotscript %}
 <script>
     // Fetch the plot data from the Flask server and render it
-    fetch('/w_plot', {
+    fetch('/mut_plot', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-            w_bars: []
+            allele_frequencies: []  // Update the key to match what the server expects
         })
     })
     .then(response => response.json())
@@ -24,59 +24,46 @@
 
 {% block settings %}
 
-<label for='w11'>w11:</label>
-<select name='w11' id='w11'>
-    <option value='0.6'>0.6</option>
-    <option value='0.7'>0.7</option>
-    <option value='0.8'>0.8</option>
-    <option value='0.9'>0.9</option>
-    <option value='1.0'>1.0</option>
+<label for='pop'>Population Size:</label>
+<select name='pop' id='pop'>
+    <option value='25'>25</option>
+    <option value='100'>100</option>
+    <option value='250'>250</option>
 </select>
-<label for='w12'>w11:</label>
-<select name='w12' id='w12'>
-    <option value='0.6'>0.6</option>
-    <option value='0.7'>0.7</option>
-    <option value='0.8'>0.8</option>
-    <option value='0.9'>0.9</option>
-    <option value='1.0'>1.0</option>ß
-</select>
-<label for='w22'>w22:</label>
-<select name='w22' id='w22'>
-    <option value='0.6'>0.6</option>
-    <option value='0.7'>0.7</option>
-    <option value='0.8'>0.8</option>
-    <option value='0.9'>0.9</option>
-    <option value='1.0'>1.0</option>
+<label for='mu'>mu:</label>
+<select name='mu' id='mu'>
+    <option value='0'>None</option>
+    <option value='0.0001'>0.0001</option>
+    <option value='0.001'>0.001</option>
+    <option value='0.01'>0.01</option>
 </select>
 <br>
 <button onclick='startSimulation()'>Start</button>
 <button onclick='clearGraph()'>Clear</button>
 
-
 <script>
-    
+
     function startSimulation() {
-        fetch('/w_reset', {
+        fetch('/mut_reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                w11: parseFloat(document.getElementById('w11').value),
-                w12: parseFloat(document.getElementById('w12').value),
-                w22: parseFloat(document.getElementById('w22').value)
+                pop: parseInt(document.getElementById('pop').value),
+                mu: parseFloat(document.getElementById('mu').value)
             })
         })
-       .then(response => response.json())
-       .then(data => {
-            w_bars = [];
+        .then(response => response.json())
+        .then(data => {
+            allele_frequencies = [];  // Update the key to match what the server expects
 
             updateSimulation();
-       })
+        })
     }
 
     function updateSimulation() {
-        fetch('w_next', {
+        fetch('/mut_next', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -84,25 +71,25 @@
         })
         .then(response => response.json())
         .then(data => {
-            fetch('/w_plot', {
+            fetch('/mut_plot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    w_bars: data.w_bars
+                    allele_frequencies: data.pop_freqs // Update the key to match what the server expects
                 })
             })
             .then(response => response.json())
             .then(data => {
                 const plotDiv = document.getElementById('plot');
-                Plotly.react(plotDiv, data.data, data.layout);
+                Plotly.newPlot(plotDiv, data.data, data.layout);
             });
-        })
+        });
     }
 
     function clearGraph() {
-        fetch('/w_clear', {
+        fetch('/mut_clear', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
