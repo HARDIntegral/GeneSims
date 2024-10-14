@@ -61,23 +61,16 @@ def drift():
 @app.route('/plot', methods=['POST'])
 def plot():
     freqs = request.get_json().get('freqs', [])
-    # Get existing frequency lists from session, or initialize if not present
     freqs_list = session.get('freqs_list', [])
-    # Append the new frequencies as a new trace
     freqs_list.append(freqs)
-    # Update the session with the new list of frequency lists
     session['freqs_list'] = freqs_list
-    # Create a new plot with the list of lists of frequencies
-    fig = create_plot(freqs_list)  # Pass the list of lists
-    # Convert the figure to JSON format for Plotly.js
+    fig = create_plot(freqs_list) 
     plot_data = fig.to_dict()
     return jsonify(plot_data)
 
 @app.route('/clear', methods=['POST'])
 def clear_graph():
-    session['freqs_list'] = []  # Reset frequency data to an empty list
-    # Create an empty plot
-    fig = create_plot()  # Use your existing function to create an empty plot
-    # Convert the figure to JSON format for Plotly.js
+    session['freqs_list'] = [] 
+    fig = create_plot() 
     plot_data = fig.to_dict()
     return jsonify(plot_data)

@@ -5,11 +5,9 @@ import numpy as np
 from app import app
 
 def next_gen(freq, pop):
-    ct = 0
-    for i in range(2 * pop):
-        if rand() < freq:
-            ct += 1
-    return ct / (2 * pop)
+    random_values = np.random.rand(2 * pop)
+    count = np.sum(random_values < freq) 
+    return count / (2 * pop) 
 
 
 @app.route('/d_reset', methods=['POST'])
