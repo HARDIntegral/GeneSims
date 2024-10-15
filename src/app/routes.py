@@ -24,7 +24,11 @@ def create_plot(freqs_list=None):
             fig.add_trace(go.Scatter(x=x_vals, y=freqs, mode='lines', name=f'Allele Frequency {i + 1}'))
 
     fig.update_layout(
-        title='Allele Frequency over Evolutionary Time',
+        title={
+            'text': 'Allele Frequency over Evolutionary Time',
+            'x': 0.5,
+            'xanchor': 'center'
+        },
         xaxis=dict(range=[0, max(len(freq) for freq in freqs_list) if freqs_list else 100]),  # Adapt the range dynamically
         yaxis=dict(range=[0, 1]),
         yaxis_title='Allele Frequency',
@@ -38,7 +42,7 @@ plot_html = create_plot()
 
 @app.route('/')
 def index():
-    return render_template('index.html', title='Home', plot=plot_html)
+    return render_template('selection.html', title='Selection', plot=plot_html)
 
 @app.route('/selection')
 def selection():

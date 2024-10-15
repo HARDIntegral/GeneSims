@@ -17,7 +17,11 @@ def create_w_plot(w_bars_list=None):
             fig.add_trace(go.Scatter(x=x_vals, y=w_bars, mode='lines'))
 
     fig.update_layout(
-        title='W Bar Value over Allele Frequency',
+        title={
+            'text': 'W Bar Value over Allele Frequency',
+            'x': 0.5,
+            'xanchor': 'center'
+        },
         xaxis=dict(range=[0, 100]),  # Adapt the range dynamically
         yaxis=dict(range=[0, 1]),
         yaxis_title='W Bar',

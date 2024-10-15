@@ -15,7 +15,11 @@ def create_plot(freqs_list=None, title='Allele Frequency Distribution'):
     
     # Update layout
     fig.update_layout(
-        title=title,
+        title={
+            'text': title,
+            'x': 0.5,
+            'xanchor': 'center'
+        },
         xaxis_title='Allele Frequency',
         yaxis_title='Number of Populations',
         xaxis=dict(dtick=0.1, range=[0, 1.1]),

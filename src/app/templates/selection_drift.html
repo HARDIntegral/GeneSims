@@ -4,22 +4,22 @@
 
 {% block settings %}
 
-<label for='gens'>Number for Generations:</label>
+<label for='gens'>Number for Generations:&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type='number' id='gens' name='gens' min='10' max='10000' value='100' required>
 <br>
-<label for='p'>Initial Allele Frequency (p):</label>
+<label for='p'>Initial Allele Frequency (p):&nbsp;</label>
 <input type='number' id='p' name='p' min='0' max='1' step='0.01' value='0.1' required>
 <br>
-<label for='w11'>Fitness for A1A1 (w11):</label>
+<label for='w11'>Fitness for A1A1 (w11):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type='number' id='w11' name='w11' value='1.2' min='0' max='2' step='0.1' required>
 <br>
-<label for='w12'>Fitness of A1A2 (w12):</label>
+<label for='w12'>Fitness of A1A2 (w12):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type='number' id='w12' name='w12' value='1.0' min='0' max='2' step='0.1' required>
 <br>
-<label for='w22'>Fitness of A2A2 (w22):</label>
+<label for='w22'>Fitness of A2A2 (w22):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type='number' id='w22' name='w22' value='0.8' min='0' max='2' step='0.1' required>
 <br>
-<label for='pop'>Population Size</label>
+<label for='pop'>Population Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
 <input type='number' id='pop' name='pop' value='100' min='10' max='1000000' step='10' required>
 <br>
 <button onclick='startSimulation()'>Start</button>
