@@ -2,27 +2,49 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #06666a;
+    min-width: 800px;
+    background-color: #DBFFFF;
+}
+
+#menu_label {
+    font-size: 20px;
+    color: #2C3E50;
+    margin-left: 10px;
+    position: fixed;
+    border: 7px solid #00C3C3;
+    top: 0;
+    left: 10px;
+    z-index: 1;
+    width: 165px;
+    text-align: center;
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 20px;
+    border-radius: 15px;
+    background-color: #8EC7D2;
 }
 
 /* Style for the sidebar */
 #menu {
     height: 100%;
-    width: 175px;
-    /* Width of the sidebar */
+    width: 180px;
+    margin-top: 90px;
+    padding-top: 10px;
+    padding-left: 20px;
+    /* Create space for the menu label */
     position: fixed;
-    /* Fixed sidebar (stay in place when you scroll) */
     top: 0;
     left: 0;
-    background-color: #00baab;
-    padding-top: 10px;
+    /* Optional: add a background color for the sidebar */
 }
 
 /* Style the list inside the sidebar */
 #menu ul {
     list-style-type: none;
-    padding: 0;
-    background-color: #00baab;
+    padding: 10px;
+    border-radius: 15px;
+    border: 7px solid #00C3C3;
+    background-color: #8EC7D2;
 }
 
 #menu ul li {
@@ -32,30 +54,58 @@ body {
 
 #menu ul li a {
     text-decoration: none;
-    color: black;
+    color: #2C3E50;
     display: block;
 }
 
 #menu ul li a:hover {
-    background-color: #c3c3c3;
+    color: #FFF;
+    border-radius: 5px;
+    padding: 2px;
+    background-color: #00C3C3;
 }
 
 /* Page content */
 #title {
+    width: 635px;
+    height: 40px;
     margin-left: 220px;
+    border: 7px solid #00C3C3;
+    margin-right: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border-radius: 15px;
+    color: #2C3E50;
+    text-align: center;
     /* Same width as the sidebar */
-    padding: 10px;
-    background-color: #00baab;
+    padding: 20px;
+    background-color: #8EC7D2;
+}
+
+h1 {
+    margin-top: 5px;
 }
 
 #plot {
+    width: 655px;
+    height: 435px;
     margin-left: 220px;
+    margin-bottom: 10px;
+    margin-right: 10px;
     /* Same width as the sidebar + some extra space */
     padding: 10px;
+    border-radius: 15px;
+    background-color: #FFF;
+    border: 7px solid #00C3C3
 }
 
 #settings {
+    width: 635px;
+    color: #2C3E50;
     margin-left: 220px;
-    padding: 10px;
-    background-color: #00baab;
+    margin-right: 10px;
+    border-radius: 15px;
+    padding: 20px;
+    background-color: #8EC7D2;
+    border: 7px solid #00C3C3
 }

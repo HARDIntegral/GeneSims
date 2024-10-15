@@ -35,7 +35,7 @@
 
     function startSimulation() {
         console.log(parseInt(document.getElementById('gens').value))
-        fetch('d_reset', {
+        fetch('/d_reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -53,7 +53,7 @@
     }
 
     function updateSimulation() {
-        fetch('d_next', {
+        fetch('/d_next', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -61,7 +61,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            fetch('plot', {
+            fetch('/plot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

@@ -27,7 +27,7 @@
 
 <script>
     function startSimulation() {
-        fetch('sd_reset', {
+        fetch('/sd_reset', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +50,7 @@
     }
 
     function updateSimulation() {
-        fetch('sd_next', {
+        fetch('/sd_next', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -58,7 +58,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            fetch('plot', {
+            fetch('/plot', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
