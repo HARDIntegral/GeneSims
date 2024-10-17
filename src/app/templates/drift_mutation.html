@@ -20,6 +20,8 @@
         Plotly.newPlot(plotDiv, data.data, data.layout);
     });
 </script>
+
+<p id='stats'>μ: σ²:</p>
 {% endblock %}
 
 {% block settings %}
@@ -84,8 +86,23 @@
             .then(data => {
                 const plotDiv = document.getElementById('plot');
                 Plotly.newPlot(plotDiv, data.data, data.layout);
+
+                document.getElementById('stats').textContent = 
+                    'μ:'+ calculateMean(data.data[0].x) + '\tσ²:' + calculateVariance(data.data[0].x);
             });
         });
+    }
+
+    function calculateMean(arr) {
+        const sum = arr.reduce((acc, val) => acc + val, 0);
+        return (sum / arr.length).toFixed(5);
+    }
+
+    function calculateVariance(arr) {
+        const mean = calculateMean(arr);
+        const squaredDifferences = arr.map(val => (val - mean) ** 2);
+        const variance = squaredDifferences.reduce((acc, val) => acc + val, 0) / arr.length;
+        return variance.toFixed(5);
     }
 
     function clearGraph() {

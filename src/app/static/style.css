@@ -94,6 +94,7 @@ h1 {
     margin-right: 10px;
     /* Same width as the sidebar + some extra space */
     padding: 10px;
+    padding-bottom: 20px;
     border-radius: 15px;
     background-color: #FFF;
     border: 7px solid #00C3C3
@@ -114,6 +115,11 @@ h1 {
     margin-left: 230px;
     font-size: 12px;
     color: #2C3E50;
+}
+
+#stats {
+    margin-top: 0;
+    text-align: center;
 }
 
 /* Basic button styling */

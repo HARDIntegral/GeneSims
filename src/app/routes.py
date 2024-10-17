@@ -29,6 +29,7 @@ def create_plot(freqs_list=None):
             'x': 0.5,
             'xanchor': 'center'
         },
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(range=[0, max(len(freq) for freq in freqs_list) if freqs_list else 100]),  # Adapt the range dynamically
         yaxis=dict(range=[0, 1]),
         yaxis_title='Allele Frequency',

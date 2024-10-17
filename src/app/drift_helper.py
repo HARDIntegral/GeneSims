@@ -20,6 +20,7 @@ def create_plot(freqs_list=None, title='Allele Frequency Distribution'):
             'x': 0.5,
             'xanchor': 'center'
         },
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis_title='Allele Frequency',
         yaxis_title='Number of Populations',
         xaxis=dict(dtick=0.1, range=[0, 1.1]),

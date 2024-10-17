@@ -22,6 +22,7 @@ def create_w_plot(w_bars_list=None):
             'x': 0.5,
             'xanchor': 'center'
         },
+        plot_bgcolor='rgba(0,0,0,0)',
         xaxis=dict(range=[0, 100]),  # Adapt the range dynamically
         yaxis=dict(range=[0, 1]),
         yaxis_title='W Bar',
