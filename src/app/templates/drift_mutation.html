@@ -14,11 +14,11 @@
             allele_frequencies: []  // Update the key to match what the server expects
         })
     })
-    .then(response => response.json())
-    .then(data => {
-        const plotDiv = document.getElementById('plot');
-        Plotly.newPlot(plotDiv, data.data, data.layout);
-    });
+        .then(response => response.json())
+        .then(data => {
+            const plotDiv = document.getElementById('plot');
+            Plotly.newPlot(plotDiv, data.data, data.layout);
+        });
 </script>
 
 <p id='stats'>μ: σ²:</p>
@@ -56,12 +56,12 @@
                 mu: parseFloat(document.getElementById('mu').value)
             })
         })
-        .then(response => response.json())
-        .then(data => {
-            allele_frequencies = [];  // Update the key to match what the server expects
+            .then(response => response.json())
+            .then(data => {
+                allele_frequencies = data.pop_freqs;  // Preserve frequencies from the response
 
-            updateSimulation();
-        })
+                updateSimulation();
+            });
     }
 
     function updateSimulation() {
@@ -71,26 +71,26 @@
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            fetch('/mut_plot', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    allele_frequencies: data.pop_freqs // Update the key to match what the server expects
-                })
-            })
             .then(response => response.json())
             .then(data => {
-                const plotDiv = document.getElementById('plot');
-                Plotly.newPlot(plotDiv, data.data, data.layout);
+                fetch('/mut_plot', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        allele_frequencies: data.pop_freqs // Update the key to match what the server expects
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const plotDiv = document.getElementById('plot');
+                        Plotly.newPlot(plotDiv, data.data, data.layout);
 
-                document.getElementById('stats').textContent = 
-                    'μ:'+ calculateMean(data.data[0].x) + '\tσ²:' + calculateVariance(data.data[0].x);
+                        document.getElementById('stats').textContent =
+                            'μ:' + calculateMean(data.data[0].x) + '\tσ²:' + calculateVariance(data.data[0].x);
+                    });
             });
-        });
     }
 
     function calculateMean(arr) {
@@ -106,17 +106,38 @@
     }
 
     function clearGraph() {
+        // Clear the plot
         fetch('/mut_clear', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            const plotDiv = document.getElementById('plot');
-            Plotly.react(plotDiv, data.data, data.layout);
-        });
+            .then(response => response.json())
+            .then(data => {
+                const plotDiv = document.getElementById('plot');
+                Plotly.react(plotDiv, data.data, data.layout);
+            });
+
+        // Reset the simulation state
+        resetSimulation();
+    }
+
+    function resetSimulation() {
+        fetch('/mut_reset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                pop: parseInt(document.getElementById('pop').value),
+                mu: parseFloat(document.getElementById('mu').value)
+            })
+        })
+            .then(response => response.json())
+            .then(data => {
+                allele_frequencies = data.pop_freqs;  // Reset to initial frequencies
+            });
     }
 
 </script>

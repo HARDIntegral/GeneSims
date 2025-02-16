@@ -23,8 +23,18 @@ def create_w_plot(w_bars_list=None):
             'xanchor': 'center'
         },
         plot_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(range=[0, 100]),  # Adapt the range dynamically
-        yaxis=dict(range=[0, 1]),
+        xaxis=dict(
+            range=[0, 100],
+            showline=True,      # Show the y-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the y-axis line (optional)
+        ),  # Adapt the range dynamically
+        yaxis=dict(
+            range=[0, 1],
+            showline=True,      # Show the y-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the y-axis line (optional)
+        ),
         yaxis_title='W Bar',
         xaxis_title='Allele Frequency as a Percentage',
         showlegend=False  # Turn off the legend if desired

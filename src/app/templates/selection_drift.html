@@ -5,23 +5,53 @@
 {% block settings %}
 
 <label for='gens'>Number for Generations:&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type='number' id='gens' name='gens' min='10' max='10000' value='100' required>
-<br>
-<label for='p'>Initial Allele Frequency (p):&nbsp;</label>
-<input type='number' id='p' name='p' min='0' max='1' step='0.01' value='0.1' required>
-<br>
+<select name='gens' id='gens'>
+    <option value='10'>10</option>
+    <option value='50'>50</option>
+    <option value='100'>100</option>
+    <option value='500'>500</option>
+    <option value='1000'>1000</option>
+    <option value='5000'>5000</option>
+    <option value='10000'>10000</option>
+</select>
 <label for='w11'>Fitness for A1A1 (w11):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type='number' id='w11' name='w11' value='1.2' min='0' max='2' step='0.1' required>
-<br>
+<select name='w11' id='w11'>
+    <option value='1.0'>1.0</option>
+    <option value='0.9'>0.9</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.6'>0.6</option>
+</select>
 <label for='w12'>Fitness of A1A2 (w12):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type='number' id='w12' name='w12' value='1.0' min='0' max='2' step='0.1' required>
-<br>
+<select name='w12' id='w12'>
+    <option value='1.0'>1.0</option>
+    <option value='0.9'>0.9</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.6'>0.6</option>
+</select>
 <label for='w22'>Fitness of A2A2 (w22):&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type='number' id='w22' name='w22' value='0.8' min='0' max='2' step='0.1' required>
-<br>
+<select name='w22' id='w22'>
+    <option value='1.0'>1.0</option>
+    <option value='0.9'>0.9</option>
+    <option value='0.8'>0.8</option>
+    <option value='0.7'>0.7</option>
+    <option value='0.6'>0.6</option>
+</select>
 <label for='pop'>Population
     Size&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
-<input type='number' id='pop' name='pop' value='100' min='10' max='1000000' step='10' required>
+<select name='pop' id='pop'>
+    <option value='10'>10</option>
+    <option value='25'>25</option>
+    <option value='50'>50</option>
+    <option value='100'>100</option>
+    <option value='500'>500</option>
+    <option value='1000'>1000</option>
+    <option value='5000'>5000</option>
+    <option value='10000'>10000</option>
+</select>
+<label for='p'>Initial Allele Frequency (p):&nbsp;</label>
+<input type='number' id='p' name='p' min='0' max='1' step='0.01' value='0.1' required>
 <br>
 <button onclick='startSimulation()'>Start</button>
 <button onclick='clearGraph()'>Clear</button>

@@ -23,8 +23,21 @@ def create_plot(freqs_list=None, title='Allele Frequency Distribution'):
         plot_bgcolor='rgba(0,0,0,0)',
         xaxis_title='Allele Frequency',
         yaxis_title='Number of Populations',
-        xaxis=dict(dtick=0.1, range=[0, 1.1]),
-        yaxis=dict(title='Count', autorange=True, range=[0, 10]),
+        xaxis=dict(
+            dtick=0.1, 
+            range=[0, 1.1],
+            showline=True,      # Show the y-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the y-axis line (optional)
+        ),
+        yaxis=dict(
+            title='Count', 
+            autorange=True, 
+            range=[0, 10],
+            showline=True,      # Show the y-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the y-axis line (optional)
+            ),
         bargap=0.2
     )
     

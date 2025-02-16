@@ -46,22 +46,26 @@
 <script>
 
     function startSimulation() {
-        fetch('/mig_reset', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                pop: parseInt(document.getElementById('pop').value),
-                mig: parseFloat(document.getElementById('mig').value)
+        // Check if session has already been initialized
+        if (!sessionStorage.getItem("simulationStarted")) {
+            fetch('/mig_reset', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    pop: parseInt(document.getElementById('pop').value),
+                    mig: parseFloat(document.getElementById('mig').value)
+                })
             })
-        })
-            .then(response => response.json())
-            .then(data => {
-                allele_frequencies = [];  // Update the key to match what the server expects
-
-                updateSimulation();
-            })
+                .then(response => response.json())
+                .then(data => {
+                    sessionStorage.setItem("simulationStarted", "true");  // Set flag in session storage
+                    updateSimulation();
+                })
+        } else {
+            updateSimulation();  // Start the simulation if it's already initialized
+        }
     }
 
     function updateSimulation() {
@@ -79,7 +83,7 @@
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
-                        allele_frequencies: data.pop_freqs // Update the key to match what the server expects
+                        allele_frequencies: data.pop_freqs
                     })
                 })
                     .then(response => response.json())
@@ -116,9 +120,11 @@
             .then(data => {
                 const plotDiv = document.getElementById('plot');
                 Plotly.react(plotDiv, data.data, data.layout);
+                sessionStorage.removeItem("simulationStarted");  // Reset session flag on clear
             });
     }
 
 </script>
+
 
 {% endblock %}

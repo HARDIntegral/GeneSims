@@ -23,15 +23,32 @@ def create_plot(freqs_list=None):
             x_vals = list(range(len(freqs)))  # x-axis is generation numbers
             fig.add_trace(go.Scatter(x=x_vals, y=freqs, mode='lines', name=f'Allele Frequency {i + 1}'))
 
+    x_range = [0, 100]  # Default range
+    # Check if freqs_list is not None and not the default value
+    if freqs_list and freqs_list != [[]]:
+        # Calculate the max length of the frequency list
+        max_range = max(len(freq) for freq in freqs_list)
+        x_range = [0, max_range]
+
     fig.update_layout(
         title={
-            'text': 'Allele Frequency over Evolutionary Time',
+            'text': 'Allele Frequency over Time',
             'x': 0.5,
             'xanchor': 'center'
         },
         plot_bgcolor='rgba(0,0,0,0)',
-        xaxis=dict(range=[0, max(len(freq) for freq in freqs_list) if freqs_list else 100]),  # Adapt the range dynamically
-        yaxis=dict(range=[0, 1]),
+        xaxis=dict(
+            range=x_range,      # Dynamically set the range
+            showline=True,      # Show the x-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the x-axis line (optional)
+        ),
+        yaxis=dict(
+            range=[0, 1],
+            showline=True,      # Show the y-axis line
+            showgrid=False,     # Hide the grid lines
+            linecolor='black'   # Set the color of the y-axis line (optional)
+        ),
         yaxis_title='Allele Frequency',
         xaxis_title='Generations',
         showlegend=False  # Turn off the legend if desired
