@@ -14,7 +14,7 @@ async fn main() -> std::io::Result<()> {
             .service(Files::new("/", "./static").index_file("index.html"))
             .default_service(web::get().to(fallback))
     })
-    .bind(("0.0.0.0", port))?
+    .bind(format!("0.0.0.0:{}", port))?
     .run()
     .await
 }
