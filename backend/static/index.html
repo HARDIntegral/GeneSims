@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Genetics Simulations</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+<link rel="modulepreload" href="/frontend-ef5fd77bcc059d11.js" crossorigin="anonymous" integrity="sha384-KigO3BCqLNRWUVHWbli8JmBQeEsPV0FlJf7c0ibzMMXupsLSFD02PhVbSKHLb2mR"><link rel="preload" href="/frontend-ef5fd77bcc059d11_bg.wasm" crossorigin="anonymous" integrity="sha384-iPtX3wG3NSBecqLV4FrM8AAOCGE4njmXaXGeI7FvmZBq2PWkqHkoUjRoOqdyiWQs" as="fetch" type="application/wasm"></head>
+
+<body>
+	<div id="app"></div>
+	<script type="module">
+		import init from './frontend.js';
+		init().catch(console.error);
+	</script>
+
+<script type="module">
+import init, * as bindings from '/frontend-ef5fd77bcc059d11.js';
+const wasm = await init({ module_or_path: '/frontend-ef5fd77bcc059d11_bg.wasm' });
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script></body>
+
+</html>

@@ -1,0 +1,44 @@
+# === Rust ===
+*/target/
+**/*.rs.bk
+target/
+*/target/
+
+# === Cargo ===
+*/Cargo.lock
+Cargo.lock
+frontend/Cargo.lock
+/.cargo/
+
+# === Trunk ===
+frontend/target
+frontend/dist
+/pkg/
+trunk.stamp
+
+# === WASM Bindgen/Artifacts ===
+/wasm_target/
+
+
+# === Logs ===
+*.log
+
+# === Node/npm (if any JS tooling exists) ===
+/node_modules/
+/package-lock.json
+/yarn.lock
+/pnpm-lock.yaml
+
+# === IDEs ===
+# VS Code
+.vscode/
+
+# JetBrains (IntelliJ, CLion, etc.)
+.idea/
+
+# === OS files ===
+.DS_Store
+Thumbs.db
+
+# === Misc ===
+/.env
