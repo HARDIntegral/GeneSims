@@ -8,12 +8,13 @@ async fn fallback() -> Result<actix_files::NamedFile> {
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    let port = std::env::var("PORT").unwrap_or_else(|_| "10000".to_string());
     HttpServer::new(|| {
         App::new()
             .service(Files::new("/", "./static").index_file("index.html"))
             .default_service(web::get().to(fallback))
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("0.0.0.0:{}", port))?
     .run()
     .await
 }
