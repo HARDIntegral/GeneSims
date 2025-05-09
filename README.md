@@ -39,9 +39,14 @@ cd frontend
 trunk build --release --dist ../backend/static
 ```
 
-Build the Actix backend
+Build the Actix backend:
 ```bash
 cd ../backend
 cargo build --release
 ```
 Note: if you are running the site locally, change the ip address from `0.0.0.0` to `127.0.0.1` and set a desired port value.
+
+And simply to run the application:
+```bash
+cargo run
+```
